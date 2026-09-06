@@ -61,5 +61,24 @@ func TestCriarTarefa(t *testing.T) {
 
 	if res.Code != http.StatusCreated {
 		t.Fatalf("esperava status 201, recebeu %d", res.Code)
+	}	
+}
+
+func TestListarTarefas(t *testing.T) {
+	requisicao := httptest.NewRequest(
+		http.MethodGet,
+		"/api/tasks",
+		nil,
+	)
+
+	resposta := httptest.NewRecorder()
+	newTestServer().ServeHTTP(resposta, requisicao)
+
+	if resposta.Code != http.StatusOK {
+		t.Fatalf("esperava status 200, recebeu %d", resposta.Code)
+	}
+
+	if !strings.Contains(resposta.Body.String(), "Conhecer a aplicação") {
+		t.Fatalf("a tarefa inicial não foi encontrada")
 	}
 }
