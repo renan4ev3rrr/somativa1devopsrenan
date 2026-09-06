@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"os"
 )
 
 type Task struct {
@@ -189,7 +190,11 @@ async function removeTask(id) { await fetch('/api/tasks/' + id, {method:'DELETE'
 </script></body></html>`
 
 func main() {
-	port := "8080"
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "8080"
+	}
 	server := &Server{store: NewTaskStore(), template: template.Must(template.New("home").Parse(page))}
 	log.Printf("servidor iniciado em http://localhost:%s", port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%s", port), server.routes()); err != nil {
