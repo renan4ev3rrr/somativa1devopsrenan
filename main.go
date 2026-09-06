@@ -116,11 +116,24 @@ func (s *Server) createTask(w http.ResponseWriter, r *http.Request) {
 	var input struct {
 		Title string `json:"title"`
 	}
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil || strings.TrimSpace(input.Title) == "" {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "informe um título para a tarefa"})
+
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{
+			"error": "o corpo da requisição não é válido",
+		})
 		return
 	}
-	task := s.store.add(strings.TrimSpace(input.Title))
+
+	titulo := strings.TrimSpace(input.Title)
+
+	if titulo == "" || len([]rune(titulo)) > 100 {
+		writeJSON(w, http.StatusBadRequest, map[string]string{
+			"error": "o título deve ter entre 1 e 100 caracteres",
+		})
+		return
+	}
+
+	task := s.store.add(titulo)
 	writeJSON(w, http.StatusCreated, task)
 }
 
