@@ -29,3 +29,22 @@ func TestCreateTaskRejectsEmptyTitle(t *testing.T) {
 		t.Fatalf("esperava 400, recebeu %d", res.Code)
 	}
 }
+
+func TestAlternarTarefa(t *testing.T) {
+	requisicao := httptest.NewRequest(
+		http.MethodPatch,
+		"/api/tasks/1",
+		nil,
+	)
+
+	resposta := httptest.NewRecorder()
+	newTestServer().ServeHTTP(resposta, requisicao)
+
+	if resposta.Code != http.StatusOK {
+		t.Fatalf("esperava status 200, recebeu %d", resposta.Code)
+	}
+
+	if !strings.Contains(resposta.Body.String(), `"done":false`) {
+		t.Fatalf("a tarefa não foi alternada corretamente")
+	}
+}
