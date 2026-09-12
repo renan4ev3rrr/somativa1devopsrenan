@@ -52,6 +52,7 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           CI_STATUS: ${{ needs.ci.result }}
           CD_STATUS: ${{ needs.cd.result }}
+
         run: |
           mensagem="Workflow CI/CD executado no repositório somativa1devopsrenan. CI: ${CI_STATUS} | Docker: ${CD_STATUS}"
 
