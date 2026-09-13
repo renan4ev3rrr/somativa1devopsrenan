@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - "feat/**"
+      - "somativa-2-testes"
+
   pull_request:
     branches:
       - main
@@ -38,7 +40,7 @@ jobs:
       - name: Construir imagem Docker
         run: docker build -t lista-tarefas:teste .
 
-  alerta-discord:
+    alerta-discord:
     name: Enviar alerta para o Discord
     runs-on: ubuntu-latest
     needs:
@@ -52,17 +54,16 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           CI_STATUS: ${{ needs.ci.result }}
           CD_STATUS: ${{ needs.cd.result }}
-
-
-
         run: |
-          mensagem="Workflow CI/CD executado no repositório somativa1devopsrenan. CI: ${CI_STATUS} | Docker: ${CD_STATUS}"
+          mensagem="Workflow CI/CD executado no repositorio somativa1devopsrenan. CI: ${CI_STATUS} | Docker: ${CD_STATUS}"
 
           jq -n \
             --arg content "$mensagem" \
             '{content: $content}' > mensagem.json
 
-          curl -fsS \
+          curl --fail-with-body \
+            --silent \
+            --show-error \
             -H "Content-Type: application/json" \
             -d @mensagem.json \
             "$DISCORD_WEBHOOK"
