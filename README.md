@@ -7,7 +7,7 @@ Aplicação web simples feita em Go para a atividade Somativa 1 de DevOps. Ela p
 ```bash
 go run .
 ```
-
+O projeto também envia alertas do CI/CD para o Discord.
 Acesse http://localhost:8080. Para rodar os testes:
 
 ```bash
